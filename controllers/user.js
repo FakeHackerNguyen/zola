@@ -323,9 +323,13 @@ exports.answerRequestAddFriend = async (req, res) => {
     receiver: req.user._id,
   });
 
+  const receiver = await User.findById(request.owner);
+
   if (answer === "yes") {
     user.friends.push(request.owner);
+    receiver.friends.push(req.user._id);
     await user.save();
+    await receiver.save();
     await request.delete();
   } else {
     await request.delete();
